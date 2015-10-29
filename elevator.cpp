@@ -28,14 +28,14 @@ struct elevator
 // What floor are you calling the elevator from?
 int currentFloor()
 {
-  int floorCall;
+  int floorCall = 0;
   cout << "What floor are you on? ";
   cin >> floorCall;
   if( floorCall < numFloors+1 && floorCall > 0 )
     {
       return floorCall;
     }
-  if( floorCall > numFloors || floorCall < 1 )
+  else
     {
       cout << "Please enter a valid floor." << endl;
       return currentFloor();
@@ -45,11 +45,11 @@ int currentFloor()
 // From your current floor, what direction are you going?
 int currentDirection( int floorCall )
 {
-  char temp;
-  int directionCall;
-  cout << "What direction are you going? (U/D) ";
+  std::string temp = "";
+  int directionCall = 0;
+  cout << "What direction are you going? (up/down) ";
   cin >> temp;
-  if( toupper( temp ) == 'U' )
+  if( toupper( temp[0] ) == 'U' )
     {
       if( floorCall < numFloors )
 	{
@@ -61,7 +61,7 @@ int currentDirection( int floorCall )
 	  return directionCall = 2; // DOWN
 	}
     }
-  if( toupper( temp ) == 'D' )
+  if( toupper( temp[0] ) == 'D' )
     {
       if( floorCall > 1 )
 	{
@@ -83,7 +83,7 @@ int currentDirection( int floorCall )
 // From your floor and direction, which floor would you like to go to?
 int currentDesired()
 {
-  int desiredCall;
+  int desiredCall = 0;
   cout << "What floor would you like to go to? ";
   cin >> desiredCall;
   if( elevator.direction == 1 )
@@ -92,7 +92,6 @@ int currentDesired()
       {
       if( desiredCall < numFloors+1 )
 	{
-	  cout << "Returning: " << desiredCall << endl;
 	  return desiredCall;
 	}
       if( desiredCall > numFloors )
@@ -126,6 +125,11 @@ int currentDesired()
 	  cout << "Please enter a floor below you." << endl;
 	  return currentDesired(); // ERROR
 	}
+    }  
+  else
+    {
+      cout << "How the Hell did you get here?" << endl;
+      return currentDesired(); // ERROR
     }
 }
 
@@ -209,6 +213,9 @@ int main()
       elevator.currentFloor = elevator.destinationFloor;
 
       cout << "Elevator is now on floor " << elevator.currentFloor << '.' << endl;
+      
+      // Elevator is no longer moving.
+      elevator.direction = 0;
 
       sleep( 1 );
 
